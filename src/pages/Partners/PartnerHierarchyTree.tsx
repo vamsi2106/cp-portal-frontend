@@ -19,10 +19,19 @@ const PartnerHierarchyTree = ({ data }: { data: PartnerNode }) => {
     const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
     useEffect(() => {
-        if (treeContainer.current) {
-            const { width, height } = treeContainer.current.getBoundingClientRect();
-            setDimensions({ width, height });
-        }
+        const updateDimensions = () => {
+            if (treeContainer.current) {
+                const { width, height } = treeContainer.current.getBoundingClientRect();
+                setDimensions({ 
+                    width: Math.max(width, 320), 
+                    height: Math.max(height, 400) 
+                });
+            }
+        };
+
+        updateDimensions();
+        window.addEventListener('resize', updateDimensions);
+        return () => window.removeEventListener('resize', updateDimensions);
     }, []);
 
     const transformData = (node: PartnerNode, level: number = 0): any => ({

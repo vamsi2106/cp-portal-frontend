@@ -96,7 +96,28 @@ const Dashboard = () => {
         <Col xs={24} lg={12}>
           <Card title="Partner Network Growth" bordered={false}>
             <div className="h-[300px]">
-              {/* Add network growth visualization here */}
+              <Line
+                data={{
+                  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                  datasets: [
+                    {
+                      label: 'Partners',
+                      data: hierarchy?.flatMap(node => getAllPartners(node)).length || [],
+                      borderColor: '#DAA520',
+                      tension: 0.4,
+                    }
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      position: 'bottom',
+                    },
+                  },
+                }}
+              />
             </div>
           </Card>
         </Col>
