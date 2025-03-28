@@ -1,62 +1,53 @@
 import React, { useState } from 'react';
-import {
-    Card,
-    Collapse,
-    Badge,
-    Typography,
-    Tooltip,
-    Empty,
-    Input,
-    Select,
-    Space
-} from 'antd';
-import {
-    PhoneCall,
-    Mail,
-    User,
-    Filter,
-    Search,
-    ChevronRight
-} from 'lucide-react';
-
-const { Panel } = Collapse;
-const { Text } = Typography;
-const { Option } = Select;
-
-interface LeadNode {
-    partnerId: string;
-    partnerName: string;
-    Phone_Number: string;
-    Email?: string | null;
-    leads: {
-        id: string;
-        LeadName: string;
-        Phone_Number: string;
-        Email?: string | null;
-        Owner: {
-            id: string;
-            name: string;
-            email: string;
-        }
-    }[];
-    subPartners: LeadNode[];
-}
+import { Tree, Card, Input, Select, Button, Tooltip, Badge } from 'antd';
+import { Search, Filter, RefreshCw } from 'lucide-react';
+import { LeadNode } from '../../types/lead';
 
 const LeadHierarchyView: React.FC<{ data: LeadNode[] }> = ({ data }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState<'all' | 'with-leads' | 'with-subpartners'>('all');
 
-    // Custom filter function
+    const transformToTreeData = (nodes: LeadNode[]): any[] => {
+        return nodes.map(node => ({
+            key: node.partnerId,
+            title: (
+                <div className="flex items-center justify-between w-full pr-4">
+                    <div>
+                        <span className="font-medium">{node.partnerName}</span>
+                        <span className="text-gray-500 text-sm ml-2">({node.Phone_Number})</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Badge count={node.leads.length} className="site-badge-count-4" />
+                        <Badge count={node.subPartners.length} className="site-badge-count-4" style={{ backgroundColor: '#52c41a' }} />
+                    </div>
+                </div>
+            ),
+            children: [
+                ...node.leads.map(lead => ({
+                    key: `lead-${lead.id}`,
+                    title: (
+                        <Tooltip title={`Owner: ${lead.Owner.name}`}>
+                            <div className="flex items-center text-green-600">
+                                <span>{lead.LeadName}</span>
+                                <span className="text-gray-500 text-sm ml-2">({lead.Phone_Number})</span>
+                            </div>
+                        </Tooltip>
+                    ),
+                    isLeaf: true,
+                })),
+                ...transformToTreeData(node.subPartners)
+            ],
+        }));
+    };
+
     const filterData = (nodes: LeadNode[]) => {
         return nodes.filter(node => {
-            // Search filter
             const matchesSearch =
                 node.partnerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 node.leads.some(lead =>
                     lead.LeadName.toLowerCase().includes(searchTerm.toLowerCase())
                 );
 
-            // Type filter
             const matchesType =
                 filterType === 'all' ||
                 (filterType === 'with-leads' && node.leads.length > 0) ||
@@ -66,129 +57,41 @@ const LeadHierarchyView: React.FC<{ data: LeadNode[] }> = ({ data }) => {
         });
     };
 
-    const renderLeadItem = (lead: LeadNode['leads'][0]) => (
-        <div
-            key={lead.id}
-            className="flex items-center justify-between p-2 hover:bg-gray-50 rounded"
-        >
-            <div className="flex items-center space-x-3">
-                <PhoneCall className="text-green-600 w-5 h-5" />
-                <div>
-                    <Text strong>{lead.LeadName}</Text>
-                    <div className="text-xs text-gray-500 flex items-center space-x-2">
-                        <span>{lead.Phone_Number}</span>
-                        {lead.Email && (
-                            <Tooltip title={lead.Email}>
-                                <Mail className="w-3 h-3 text-gray-400" />
-                            </Tooltip>
-                        )}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                        Owner: {lead.Owner.name}
-                    </div>
-                </div>
-            </div>
-            <Badge
-                count={1}
-                color="green"
-                className="transform scale-75"
-            />
-        </div>
-    );
-
-    const renderPartnerPanel = (partner: LeadNode) => (
-        <Panel
-            key={partner.partnerId}
-            header={
-                <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center space-x-3">
-                        <User className="text-blue-600 w-5 h-5" />
-                        <div>
-                            <Text strong>{partner.partnerName}</Text>
-                            <div className="text-xs text-gray-500">
-                                {partner.Phone_Number}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        {partner.leads.length > 0 && (
-                            <Badge
-                                count={partner.leads.length}
-                                color="green"
-                            />
-                        )}
-                        {partner.subPartners.length > 0 && (
-                            <Badge
-                                count={partner.subPartners.length}
-                                color="blue"
-                            />
-                        )}
-                    </div>
-                </div>
-            }
-        >
-            <div className="space-y-2 pl-2 border-l-2 border-gray-100">
-                {partner.leads.length > 0 && (
-                    <div className="transition-all hover:bg-gray-50 rounded-lg p-2">
-                        <Text type="secondary" className="text-xs uppercase font-semibold">Leads</Text>
-                        {partner.leads.map(renderLeadItem)}
-                    </div>
-                )}
-
-                {partner.subPartners.length > 0 && (
-                    <div>
-                        <Text type="secondary" className="text-xs uppercase">Sub Partners</Text>
-                        <Collapse ghost>
-                            {partner.subPartners.map(renderPartnerPanel)}
-                        </Collapse>
-                    </div>
-                )}
-            </div>
-        </Panel>
-    );
-
-    const filteredData = filterData(data);
-
     return (
-        <Card
-            title="Lead Hierarchy"
-            extra={
-                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                    <Input
-                        prefix={<Search className="w-4 h-4" />}
-                        placeholder="Search partners or leads"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full sm:max-w-md"
-                    />
-                    <Select
-                        value={filterType}
-                        onChange={(value) => setFilterType(value)}
-                        className="w-full sm:w-48"
-                    >
-                        <Option value="all">All Partners</Option>
-                        <Option value="with-leads">Partners with Leads</Option>
-                        <Option value="with-subpartners">Partners with Sub-Partners</Option>
-                    </Select>
-                </div>
-            }
-        >
-            <div className="overflow-x-auto"> {/* Added for horizontal scrolling on smaller screens */}
-                {filteredData.length > 0 ? (
-                    <Collapse
-                        accordion
-                        expandIcon={({ isActive }) => (
-                            <ChevronRight
-                                className={`transform transition-transform ${isActive ? 'rotate-90' : ''}`}
-                            />
-                        )}
-                    >
-                        {filteredData.map(renderPartnerPanel)}
-                    </Collapse>
-                ) : (
-                    <Empty description="No partners found" />
-                )}
+        <Card className="lead-hierarchy-view">
+            <div className="flex flex-wrap gap-4 mb-4">
+                <Input
+                    prefix={<Search className="w-4 h-4" />}
+                    placeholder="Search partners or leads..."
+                    onChange={e => setSearchTerm(e.target.value)}
+                    className="max-w-xs"
+                />
+                <Select
+                    defaultValue="all"
+                    onChange={value => setFilterType(value)}
+                    options={[
+                        { value: 'all', label: 'All Partners' },
+                        { value: 'with-leads', label: 'Partners with Leads' },
+                        { value: 'with-subpartners', label: 'Partners with Sub-partners' },
+                    ]}
+                    className="min-w-[200px]"
+                />
+                <Button
+                    icon={<RefreshCw className="w-4 h-4" />}
+                    onClick={() => {
+                        setSearchTerm('');
+                        setFilterType('all');
+                    }}
+                >
+                    Reset Filters
+                </Button>
             </div>
+            <Tree
+                showLine={{ showLeafIcon: false }}
+                defaultExpandAll
+                treeData={transformToTreeData(filterData(data))}
+                className="custom-tree"
+            />
         </Card>
     );
 };

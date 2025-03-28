@@ -2,6 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Tree Styles */
+.custom-tree .ant-tree-node-content-wrapper {
+  @apply hover:bg-blue-50 transition-colors;
+}
+
+.custom-tree .ant-tree-node-selected {
+  @apply bg-blue-100 !important;
+}
+
+/* Dashboard Cards */
+.ant-card {
+  @apply rounded-lg border-0 shadow-sm;
+}
+
+.ant-card-head {
+  @apply border-b-0;
+}
+
+/* Statistics */
+.ant-statistic-title {
+  @apply text-gray-600;
+}
+
+.ant-statistic-content {
+  @apply text-gray-800;
+}
+
+/* Progress bars */
+.ant-progress-bg {
+  @apply transition-all duration-300;
+}
+
 
 @keyframes fadeIn {
   from { opacity: 0; }
