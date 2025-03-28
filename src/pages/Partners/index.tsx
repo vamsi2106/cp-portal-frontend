@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Card, Tag, Tabs, Spin, Modal, Form, Input, message } from 'antd';
+import { Table, Button, Card, Tag, Tabs, Spin, Modal, Form, Input, message, Select } from 'antd';
 import { Plus, Users } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
@@ -9,6 +9,7 @@ import PartnerHierarchyTree from './PartnerHierarchyTree';
 import flattenPartners from '../../helpers/partners';
 
 const { TabPane } = Tabs;
+const { Option } = Select;
 
 const Partners: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -17,6 +18,9 @@ const Partners: React.FC = () => {
     const [activeTab, setActiveTab] = useState('list');
     const [modalVisible, setModalVisible] = useState(false);
     const [form] = Form.useForm();
+    const [searchText, setSearchText] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
+
 
     useEffect(() => {
         if (user?.id) {
@@ -32,6 +36,16 @@ const Partners: React.FC = () => {
         }
     }, [modalVisible, user?.id, user?.name, form]);
 
+    const filteredHierarchy = React.useMemo(() => {
+        if (!hierarchy) return [];
+        const flattened = flattenPartners(hierarchy);
+        return flattened.filter(partner => {
+            const nameMatch = searchText ? partner.Name.toLowerCase().includes(searchText.toLowerCase()) : true;
+            const statusMatch = statusFilter ? partner.Status === statusFilter : true;
+            return nameMatch && statusMatch;
+        });
+    }, [hierarchy, searchText, statusFilter]);
+
 
     const columns = [
         {
@@ -46,6 +60,34 @@ const Partners: React.FC = () => {
                     <span className="font-medium">{text}</span>
                 </div>
             ),
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
+                <div
+                  tabIndex={0}
+                  role="menu"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      confirm();
+                    }
+                  }}
+                >
+                  <Input.Search
+                    placeholder="Search name..."
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => confirm()}
+                    onBlur={() => confirm()}
+                  />
+                </div>
+              ),
+              onFilterDropdownVisibleChange: (visible) => {
+                if (visible) {
+                 
+                }
+              },
+              onFilter: (value, record) =>
+                record.Name.toLowerCase().includes(value.toLowerCase()),
+              filterIcon: () => <SearchOutlined style={{ fontSize: 12 }} />,
+              onFilter: (value, record) => record.Name.toLowerCase().includes(value.toLowerCase()),
         },
         { title: 'Email', dataIndex: 'Email', key: 'email' },
         { title: 'Phone', dataIndex: 'Phone_Number', key: 'phone' },
@@ -55,13 +97,13 @@ const Partners: React.FC = () => {
             key: 'reportingTo',
             render: (text: string) => text ? text : user?.parentPartner?.name || '—',
         },
-        { title: 'Status', key: 'status', render: () => <Tag color="green">Active</Tag> },
+        { title: 'Status', key: 'status', render: (text:string) => <Tag color="green">{text}</Tag> , filters: [{ text: 'Active', value: 'Active' }, { text: 'Inactive', value: 'Inactive' }], onFilter: (value, record) => record.Status === value },
     ];
 
     const handleAddPartner = async (values: any) => {
         const payload = {
             ...values,
-            Parent_Partner: user.id, 
+            Parent_Partner: user.id,
         };
 
         try {
@@ -95,13 +137,30 @@ const Partners: React.FC = () => {
             </div>
 
             <Card className="overflow-hidden">
-                <Tabs 
-                    activeKey={activeTab} 
+                <Tabs
+                    activeKey={activeTab}
                     onChange={setActiveTab}
                     className="w-full overflow-x-auto min-w-[300px]"
                     type="card"
                 >
                     <TabPane tab="List View" key="list">
+                        <div className="mb-4 flex flex-wrap gap-4">
+                            <Input.Search
+                                placeholder="Search partners..."
+                                allowClear
+                                className="w-full sm:w-64"
+                                onChange={(e) => setSearchText(e.target.value)}
+                            />
+                            <Select
+                                placeholder="Filter by status"
+                                className="w-full sm:w-40"
+                                allowClear
+                                onChange={setStatusFilter}
+                            >
+                                <Option value="Active">Active</Option>
+                                <Option value="Inactive">Inactive</Option>
+                            </Select>
+                        </div>
                         {loading ? (
                             <div className="flex justify-center items-center h-40">
                                 <Spin size="large" />
@@ -110,13 +169,13 @@ const Partners: React.FC = () => {
                             <div className="overflow-x-auto -mx-4 sm:mx-0">
                                 <Table
                                     columns={columns}
-                                    dataSource={hierarchy ? flattenPartners(hierarchy) : []}
+                                    dataSource={filteredHierarchy}
                                     scroll={{ x: 'max-content' }}
                                     className="min-w-[600px]"
                                     size="middle"
                                     loading={loading}
                                     rowKey="id"
-                                    pagination={{ pageSize: 10 }}
+                                    pagination={{ pageSize: 10, showSizeChanger: true, showTotal: (total) => `Total ${total} partners` }}
                                 />
                             </div>
                         )}

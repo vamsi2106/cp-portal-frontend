@@ -127,10 +127,10 @@ const LeadHierarchyView: React.FC<{ data: LeadNode[] }> = ({ data }) => {
                 </div>
             }
         >
-            <div className="space-y-2">
+            <div className="space-y-2 pl-2 border-l-2 border-gray-100">
                 {partner.leads.length > 0 && (
-                    <div>
-                        <Text type="secondary" className="text-xs uppercase">Leads</Text>
+                    <div className="transition-all hover:bg-gray-50 rounded-lg p-2">
+                        <Text type="secondary" className="text-xs uppercase font-semibold">Leads</Text>
                         {partner.leads.map(renderLeadItem)}
                     </div>
                 )}
