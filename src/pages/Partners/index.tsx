@@ -61,7 +61,7 @@ const Partners: React.FC = () => {
     const handleAddPartner = async (values: any) => {
         const payload = {
             ...values,
-            Parent_Partner: user.id, // <-- This line changed to user.id
+            Parent_Partner: user.id, 
         };
 
         try {
@@ -94,16 +94,32 @@ const Partners: React.FC = () => {
                 </Button>
             </div>
 
-            <Card>
-                <Tabs activeKey={activeTab} onChange={setActiveTab}>
-                    <TabPane tab="Partner List" key="list">
-                        <Table
-                            columns={columns}
-                            dataSource={hierarchy ? flattenPartners(hierarchy) : []}
-                            loading={loading}
-                            rowKey="id"
-                            pagination={{ pageSize: 10 }}
-                        />
+            <Card className="overflow-hidden">
+                <Tabs 
+                    activeKey={activeTab} 
+                    onChange={setActiveTab}
+                    className="w-full overflow-x-auto min-w-[300px]"
+                    type="card"
+                >
+                    <TabPane tab="List View" key="list">
+                        {loading ? (
+                            <div className="flex justify-center items-center h-40">
+                                <Spin size="large" />
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto -mx-4 sm:mx-0">
+                                <Table
+                                    columns={columns}
+                                    dataSource={hierarchy ? flattenPartners(hierarchy) : []}
+                                    scroll={{ x: 'max-content' }}
+                                    className="min-w-[600px]"
+                                    size="middle"
+                                    loading={loading}
+                                    rowKey="id"
+                                    pagination={{ pageSize: 10 }}
+                                />
+                            </div>
+                        )}
                     </TabPane>
 
                     <TabPane tab="Hierarchy View" key="hierarchy">

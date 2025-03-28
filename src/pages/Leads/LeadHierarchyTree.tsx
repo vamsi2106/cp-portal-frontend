@@ -1,46 +1,3 @@
-// import React, { useEffect } from 'react';
-// import { Tree, Card, Spin } from 'antd';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { AppDispatch, RootState } from '../../redux/store';
-// import { fetchLeadHierarchy } from '../../redux/slices/leadSlice';
-// import type { LeadHierarchy } from '../../types/lead';
-
-// const LeadHierarchyTree: React.FC<{ partnerId: string }> = ({ partnerId }) => {
-//     const dispatch = useDispatch<AppDispatch>();
-//     const { hierarchy, loading } = useSelector((state: RootState) => state.lead);
-
-//     useEffect(() => {
-//         if (partnerId) {
-//             dispatch(fetchLeadHierarchy(partnerId));
-//         }
-//     }, [dispatch, partnerId]);
-
-//     // Convert Lead Hierarchy to Ant Design Tree Data Structure
-//     const convertToTreeData = (lead: LeadHierarchy | null) => {
-//         if (!lead) return [];
-//         return [
-//             {
-//                 title: lead.Name,
-//                 key: lead.id,
-//                 children: lead.Sub_Partners ? lead.Sub_Partners.map(convertToTreeData).flat() : [],
-//             },
-//         ];
-//     };
-
-//     return (
-//         <Card title="Lead Hierarchy" className="w-full">
-//             {loading ? (
-//                 <Spin />
-//             ) : (
-//                 <Tree treeData={convertToTreeData(hierarchy)} defaultExpandAll />
-//             )}
-//         </Card>
-//     );
-// };
-
-// export default LeadHierarchyTree;
-
-
 import React, { useState } from 'react';
 import {
     Card,
@@ -50,7 +7,8 @@ import {
     Tooltip,
     Empty,
     Input,
-    Select
+    Select,
+    Space
 } from 'antd';
 import {
     PhoneCall,
@@ -195,18 +153,18 @@ const LeadHierarchyView: React.FC<{ data: LeadNode[] }> = ({ data }) => {
         <Card
             title="Lead Hierarchy"
             extra={
-                <div className="flex items-center space-x-2">
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                     <Input
-                        prefix={<Search className="text-gray-400" />}
+                        prefix={<Search className="w-4 h-4" />}
                         placeholder="Search partners or leads"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-48"
+                        className="w-full sm:max-w-md"
                     />
                     <Select
                         value={filterType}
                         onChange={(value) => setFilterType(value)}
-                        className="w-48"
+                        className="w-full sm:w-48"
                     >
                         <Option value="all">All Partners</Option>
                         <Option value="with-leads">Partners with Leads</Option>
@@ -215,20 +173,22 @@ const LeadHierarchyView: React.FC<{ data: LeadNode[] }> = ({ data }) => {
                 </div>
             }
         >
-            {filteredData.length > 0 ? (
-                <Collapse
-                    accordion
-                    expandIcon={({ isActive }) => (
-                        <ChevronRight
-                            className={`transform transition-transform ${isActive ? 'rotate-90' : ''}`}
-                        />
-                    )}
-                >
-                    {filteredData.map(renderPartnerPanel)}
-                </Collapse>
-            ) : (
-                <Empty description="No partners found" />
-            )}
+            <div className="overflow-x-auto"> {/* Added for horizontal scrolling on smaller screens */}
+                {filteredData.length > 0 ? (
+                    <Collapse
+                        accordion
+                        expandIcon={({ isActive }) => (
+                            <ChevronRight
+                                className={`transform transition-transform ${isActive ? 'rotate-90' : ''}`}
+                            />
+                        )}
+                    >
+                        {filteredData.map(renderPartnerPanel)}
+                    </Collapse>
+                ) : (
+                    <Empty description="No partners found" />
+                )}
+            </div>
         </Card>
     );
 };

@@ -65,7 +65,7 @@ const MainLayout: React.FC = () => {
                         </div>
                     </Dropdown>
                 </Header>
-                <Content className="m-2 sm:m-4 p-4 sm:p-6 bg-white rounded-xl shadow-sm">
+                <Content className="m-2 sm:m-4 p-4 sm:p-6 bg-white rounded-xl overflow-hidden">
                     <Outlet />
                 </Content>
             </Layout>

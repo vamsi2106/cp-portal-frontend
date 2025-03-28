@@ -8,7 +8,7 @@ const PartnerForm = ({ handleSubmit, form }) => {
       layout="vertical" 
       form={form} 
       onFinish={handleSubmit}
-      className="max-w-3xl mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-sm"
+      className="max-w-3xl mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-sm max-h-[70vh] overflow-y-auto px-1" // Added className for responsiveness
     >
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12}>
