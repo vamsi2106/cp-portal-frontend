@@ -25,6 +25,7 @@ export interface PartnerHierarchy {
 
 export interface SignupRequest {
   fullName: string;
+  phoneNumber: string;
   email: string;
 }
 

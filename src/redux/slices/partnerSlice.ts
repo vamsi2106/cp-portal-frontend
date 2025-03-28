@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../api/api';
-import { API_ROUTES } from '../../constants/apiRoutes';
+import { API_ROUTES } from '../../config/apiRoutes';
 import type { Partner, PartnerDetail, PartnerHierarchy } from '../../types/partner';
+
 
 interface PartnerState {
   partners: Partner[];
@@ -19,13 +20,6 @@ const initialState: PartnerState = {
   error: null,
 };
 
-export const fetchPartners = createAsyncThunk(
-  'partner/fetchPartners',
-  async () => {
-    const response = await api.get<Partner[]>(API_ROUTES.PARTNERS.LIST);
-    return response;
-  }
-);
 
 export const fetchPartnerDetail = createAsyncThunk(
   'partner/fetchPartnerDetail',
@@ -51,18 +45,6 @@ const partnerSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPartners.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchPartners.fulfilled, (state, action) => {
-        state.loading = false;
-        state.partners = action.payload;
-      })
-      .addCase(fetchPartners.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to fetch partners';
-      })
       .addCase(fetchPartnerDetail.pending, (state) => {
         state.loading = true;
         state.error = null;

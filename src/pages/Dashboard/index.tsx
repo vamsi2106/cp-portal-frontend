@@ -11,13 +11,13 @@ const Dashboard: React.FC = () => {
   const stats = [
     {
       title: 'Total Partners',
-      value: partners.length,
+      value: 5,
       icon: <Users className="w-6 h-6 text-blue-600" />,
       trend: '+12%',
     },
     {
       title: 'Active Leads',
-      value: leads.length,
+      value: 20,
       icon: <PhoneCall className="w-6 h-6 text-green-600" />,
       trend: '+5%',
     },
