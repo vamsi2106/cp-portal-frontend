@@ -6,6 +6,7 @@ import { LeadNode } from '../../types/lead';
 const LeadHierarchyView: React.FC<{ data: LeadNode[] }> = ({ data }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState<'all' | 'with-leads' | 'with-subpartners'>('all');
+    const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(null);
 
     const transformToTreeData = (nodes: LeadNode[]): any[] => {
         return nodes.map(node => ({
@@ -41,6 +42,23 @@ const LeadHierarchyView: React.FC<{ data: LeadNode[] }> = ({ data }) => {
     };
 
     const filterData = (nodes: LeadNode[]) => {
+        if (selectedPartnerId) {
+            const findSelectedPartner = (partners: LeadNode[]): LeadNode | null => {
+                for (const partner of partners) {
+                    if (partner.partnerId === selectedPartnerId) return partner;
+                    const found = findSelectedPartner(partner.subPartners);
+                    if (found) return found;
+                }
+                return null;
+            };
+            
+            const selectedPartner = findSelectedPartner(nodes);
+            if (selectedPartner) {
+                return [selectedPartner];
+            }
+            return [];
+        }
+
         return nodes.filter(node => {
             const matchesSearch =
                 node.partnerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -91,7 +109,22 @@ const LeadHierarchyView: React.FC<{ data: LeadNode[] }> = ({ data }) => {
                 defaultExpandAll
                 treeData={transformToTreeData(filterData(data))}
                 className="custom-tree"
+                onSelect={(selectedKeys) => {
+                    const partnerId = selectedKeys[0]?.toString();
+                    if (partnerId && !partnerId.startsWith('lead-')) {
+                        setSelectedPartnerId(partnerId === selectedPartnerId ? null : partnerId);
+                    }
+                }}
+                selectedKeys={selectedPartnerId ? [selectedPartnerId] : []}
             />
+            {selectedPartnerId && (
+                <Button
+                    className="mt-4"
+                    onClick={() => setSelectedPartnerId(null)}
+                >
+                    Clear Selection
+                </Button>
+            )}
         </Card>
     );
 };
