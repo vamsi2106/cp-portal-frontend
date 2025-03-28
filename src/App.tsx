@@ -22,14 +22,18 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
-      if (user) {
-        const token = await user.getIdToken();
-        const phoneNumber = user.phoneNumber?.replace(/^\+91/, '') || '';
-        await dispatch(login({ phoneNumber, token }));
-      } else {
-        dispatch(logout());
+        if (user) {
+          const token = await user.getIdToken();
+          const phoneNumber = user.phoneNumber?.replace(/^\+91/, '') || '';
+          await dispatch(login({ phoneNumber, token }));
+        } else {
+          dispatch(logout());
+        }
+      } catch (error) {
+        setError(error instanceof Error ? error.message : 'An error occurred');
+      } finally {
+        setLoading(false);  // Always stop loading, regardless of outcome
       }
-      setLoading(false);  // Only after checking auth, stop loading
     });
 
     return () => unsubscribe();
