@@ -1,0 +1,117 @@
+{
+    "id": "890619000000369628",
+    "Name": "Nagasai Vamsi",
+    "Email": "sai@gmail.com",
+    "Address": null,
+    "Phone_Number": "8106837185",
+    "City": "Hyderabad",
+    "Parent_Partner": null,
+    "Sub_Partners": [
+        {
+            "id": "890619000000538001",
+            "Name": "New Partner 2",
+            "Email": null,
+            "Address": null,
+            "Phone_Number": "8888899999",
+            "City": null,
+            "Parent_Partner": {
+                "name": "Nagasai Vamsi",
+                "id": "890619000000369628"
+            },
+            "Sub_Partners": []
+        },
+        {
+            "id": "890619000000533001",
+            "Name": "New Partner UI Test",
+            "Email": null,
+            "Address": null,
+            "Phone_Number": "8888845678",
+            "City": null,
+            "Parent_Partner": {
+                "name": "Nagasai Vamsi",
+                "id": "890619000000369628"
+            },
+            "Sub_Partners": []
+        },
+        {
+            "id": "890619000000381001",
+            "Name": "Rami Reddy",
+            "Email": "reddy@gmail.com",
+            "Address": null,
+            "Phone_Number": "9999922222",
+            "City": "Benguluru",
+            "Parent_Partner": {
+                "name": "Nagasai Vamsi",
+                "id": "890619000000369628"
+            },
+            "Sub_Partners": [
+                {
+                    "id": "890619000000372103",
+                    "Name": "Janaki Ramudu",
+                    "Email": null,
+                    "Address": null,
+                    "Phone_Number": "7789856784",
+                    "City": null,
+                    "Parent_Partner": {
+                        "name": "Rami Reddy",
+                        "id": "890619000000381001"
+                    },
+                    "Sub_Partners": []
+                },
+                {
+                    "id": "890619000000382001",
+                    "Name": "Vamsi sai",
+                    "Email": null,
+                    "Address": null,
+                    "Phone_Number": "7786899999",
+                    "City": null,
+                    "Parent_Partner": {
+                        "name": "Rami Reddy",
+                        "id": "890619000000381001"
+                    },
+                    "Sub_Partners": [
+                        {
+                            "id": "890619000000416001",
+                            "Name": "Sahithi Devi",
+                            "Email": null,
+                            "Address": null,
+                            "Phone_Number": "9976789878",
+                            "City": null,
+                            "Parent_Partner": {
+                                "name": "Vamsi sai",
+                                "id": "890619000000382001"
+                            },
+                            "Sub_Partners": []
+                        },
+                        {
+                            "id": "890619000000385001",
+                            "Name": "James",
+                            "Email": null,
+                            "Address": null,
+                            "Phone_Number": "2289299999",
+                            "City": null,
+                            "Parent_Partner": {
+                                "name": "Vamsi sai",
+                                "id": "890619000000382001"
+                            },
+                            "Sub_Partners": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "890619000000369633",
+            "Name": "child partner",
+            "Email": null,
+            "Address": null,
+            "Phone_Number": "7878934345",
+            "City": null,
+            "Parent_Partner": {
+                "name": "Nagasai Vamsi",
+                "id": "890619000000369628"
+            },
+            "Sub_Partners": []
+        }
+    ]
+}

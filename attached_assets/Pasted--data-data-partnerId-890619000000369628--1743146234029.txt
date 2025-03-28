@@ -1,0 +1,125 @@
+{
+    "data": {
+        "data": [
+            {
+                "partnerId": "890619000000369628",
+                "partnerName": "Nagasai Vamsi",
+                "Email": "sai@gmail.com",
+                "Phone_Number": "8106837185",
+                "Address": null,
+                "leads": [],
+                "subPartners": [
+                    {
+                        "partnerId": "890619000000538001",
+                        "partnerName": "New Partner 2",
+                        "Email": null,
+                        "Phone_Number": "8888899999",
+                        "Address": null,
+                        "leads": [],
+                        "subPartners": []
+                    },
+                    {
+                        "partnerId": "890619000000533001",
+                        "partnerName": "New Partner UI Test",
+                        "Email": null,
+                        "Phone_Number": "8888845678",
+                        "Address": null,
+                        "leads": [],
+                        "subPartners": []
+                    },
+                    {
+                        "partnerId": "890619000000381001",
+                        "partnerName": "Rami Reddy",
+                        "Email": "reddy@gmail.com",
+                        "Phone_Number": "9999922222",
+                        "Address": null,
+                        "leads": [
+                            {
+                                "id": "890619000000407001",
+                                "LeadName": "Alice Last Name",
+                                "Email": null,
+                                "Phone_Number": "9893479083",
+                                "Owner": {
+                                    "id": "890619000000351001",
+                                    "name": "Vamsisai Ch",
+                                    "email": "chvamsi2106@gmail.com"
+                                }
+                            }
+                        ],
+                        "subPartners": [
+                            {
+                                "partnerId": "890619000000372103",
+                                "partnerName": "Janaki Ramudu",
+                                "Email": null,
+                                "Phone_Number": "7789856784",
+                                "Address": null,
+                                "leads": [],
+                                "subPartners": []
+                            },
+                            {
+                                "partnerId": "890619000000382001",
+                                "partnerName": "Vamsi sai",
+                                "Email": null,
+                                "Phone_Number": "7786899999",
+                                "Address": null,
+                                "leads": [
+                                    {
+                                        "id": "890619000000419001",
+                                        "LeadName": "Kannapa",
+                                        "Email": null,
+                                        "Phone_Number": "9893488567",
+                                        "Owner": {
+                                            "id": "890619000000351001",
+                                            "name": "Vamsisai Ch",
+                                            "email": "chvamsi2106@gmail.com"
+                                        }
+                                    },
+                                    {
+                                        "id": "890619000000417001",
+                                        "LeadName": "Mahesh Babu",
+                                        "Email": null,
+                                        "Phone_Number": "9893488083",
+                                        "Owner": {
+                                            "id": "890619000000351001",
+                                            "name": "Vamsisai Ch",
+                                            "email": "chvamsi2106@gmail.com"
+                                        }
+                                    }
+                                ],
+                                "subPartners": [
+                                    {
+                                        "partnerId": "890619000000416001",
+                                        "partnerName": "Sahithi Devi",
+                                        "Email": null,
+                                        "Phone_Number": "9976789878",
+                                        "Address": null,
+                                        "leads": [],
+                                        "subPartners": []
+                                    },
+                                    {
+                                        "partnerId": "890619000000385001",
+                                        "partnerName": "James",
+                                        "Email": null,
+                                        "Phone_Number": "2289299999",
+                                        "Address": null,
+                                        "leads": [],
+                                        "subPartners": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "partnerId": "890619000000369633",
+                        "partnerName": "child partner",
+                        "Email": null,
+                        "Phone_Number": "7878934345",
+                        "Address": null,
+                        "leads": [],
+                        "subPartners": []
+                    }
+                ]
+            }
+        ]
+    }
+}
