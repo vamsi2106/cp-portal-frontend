@@ -51,17 +51,24 @@ const Dashboard: React.FC = () => {
         </Row>
       </div>
 
-      <Row gutter={[16, 16]}>
+      <Row gutter={[16, 16]} className="p-4 md:p-6">
         <Col xs={24} lg={16}>
-          <Card title="Partner Performance" className="h-full">
-            {/* Add chart component here */}
-            <div className="h-[300px] flex items-center justify-center bg-gray-50 rounded">
+          <Card 
+            title="Partner Performance" 
+            className="h-full shadow-md hover:shadow-lg transition-shadow rounded-xl"
+            bodyStyle={{ padding: '16px' }}
+          >
+            <div className="h-[200px] sm:h-[300px] flex items-center justify-center bg-gray-50/50 rounded-lg">
               Chart placeholder
             </div>
           </Card>
         </Col>
         <Col xs={24} lg={8}>
-          <Card title="Recent Activities" className="h-full">
+          <Card 
+            title="Recent Activities" 
+            className="h-full shadow-md hover:shadow-lg transition-shadow rounded-xl"
+            bodyStyle={{ padding: '16px' }}
+          >
             <div className="space-y-4">
               {[1, 2, 3].map((_, index) => (
                 <div key={index} className="flex items-start space-x-3">
