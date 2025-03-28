@@ -17,9 +17,11 @@ import ProfileDetails from './pages/Profile/ProfileDetails';
 const AppContent: React.FC = () => {
   const dispatch: any = useDispatch();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      try {
       if (user) {
         const token = await user.getIdToken();
         const phoneNumber = user.phoneNumber?.replace(/^\+91/, '') || '';

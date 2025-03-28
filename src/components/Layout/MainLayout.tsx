@@ -102,3 +102,67 @@ const MainLayout: React.FC = () => {
 };
 
 export default MainLayout;
+import React, { useState } from 'react';
+import { Layout, Menu, Button } from 'antd';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+
+const { Header, Sider, Content } = Layout;
+
+const MainLayout: React.FC = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  return (
+    <Layout className="min-h-screen">
+      <Sider 
+        collapsible 
+        collapsed={collapsed} 
+        onCollapse={setCollapsed}
+        breakpoint="lg"
+        collapsedWidth="0"
+        className="fixed left-0 h-screen z-10 lg:relative"
+      >
+        <div className="h-8 m-4 bg-white/10" />
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={[location.pathname]}
+          items={[
+            {
+              key: '/dashboard',
+              label: 'Dashboard',
+              onClick: () => navigate('/dashboard')
+            },
+            {
+              key: '/partners',
+              label: 'Partners',
+              onClick: () => navigate('/partners')
+            },
+            {
+              key: '/leads',
+              label: 'Leads',
+              onClick: () => navigate('/leads')
+            }
+          ]}
+        />
+      </Sider>
+      <Layout>
+        <Header className="bg-white p-0 flex items-center justify-between">
+          <Button
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setCollapsed(!collapsed)}
+            className="lg:hidden"
+          />
+        </Header>
+        <Content className="m-4 p-6 bg-white rounded-lg">
+          <Outlet />
+        </Content>
+      </Layout>
+    </Layout>
+  );
+};
+
+export default MainLayout;
