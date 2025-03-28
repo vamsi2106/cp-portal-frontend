@@ -1,40 +1,86 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Tree Styles */
-.custom-tree .ant-tree-node-content-wrapper {
-  @apply hover:bg-blue-50 transition-colors;
+:root {
+  --primary-color: #DAA520;
+  --primary-light: #F4D03F;
+  --primary-dark: #B8860B;
 }
 
-.custom-tree .ant-tree-node-selected {
-  @apply bg-blue-100 !important;
+/* Layout Responsive Classes */
+.responsive-container {
+  @apply w-full px-4 md:px-6 lg:px-8 mx-auto max-w-7xl;
 }
 
-/* Dashboard Cards */
+.responsive-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6;
+}
+
+/* Card Styles */
 .ant-card {
-  @apply rounded-lg border-0 shadow-sm;
+  @apply rounded-lg border-0 shadow-sm transition-transform hover:shadow-md;
 }
 
 .ant-card-head {
-  @apply border-b-0;
+  @apply border-b-0 bg-amber-50;
 }
 
-/* Statistics */
+/* Tree Styles */
+.custom-tree .ant-tree-node-content-wrapper {
+  @apply hover:bg-amber-50 transition-colors;
+}
+
+.custom-tree .ant-tree-node-selected {
+  @apply bg-amber-100 !important;
+}
+
+/* Stats and Progress */
 .ant-statistic-title {
-  @apply text-gray-600;
+  @apply text-gray-600 text-sm md:text-base;
 }
 
 .ant-statistic-content {
-  @apply text-gray-800;
+  @apply text-gray-800 text-lg md:text-xl;
 }
 
-/* Progress bars */
 .ant-progress-bg {
-  @apply transition-all duration-300;
+  @apply bg-amber-500;
 }
 
+/* Responsive Tables */
+.ant-table-wrapper {
+  @apply overflow-x-auto;
+}
 
+.ant-table {
+  @apply min-w-full;
+}
+
+@media (max-width: 640px) {
+  .ant-table-cell {
+    @apply whitespace-nowrap py-2 px-3;
+  }
+}
+
+/* Button Styles */
+.ant-btn-primary {
+  @apply bg-amber-500 hover:bg-amber-600 border-amber-500;
+}
+
+/* Form Elements */
+.ant-input:focus, 
+.ant-input-focused {
+  @apply border-amber-500 shadow-amber-100;
+}
+
+/* Dashboard Cards */
+.stat-card {
+  @apply bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all;
+}
+
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
