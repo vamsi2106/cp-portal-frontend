@@ -13,6 +13,7 @@ import {
     DownOutlined,
     ContactsOutlined,
     ProfileOutlined,
+    FileTextOutlined,
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -87,6 +88,11 @@ const MainLayout: React.FC = () => {
             key: '/contacts',
             icon: <ContactsOutlined />,
             label: 'Contacts',
+        },
+        {
+            key: '/brochures',
+            icon: <FileTextOutlined />,
+            label: 'Brochures',
         },
         {
             key: '/profile',

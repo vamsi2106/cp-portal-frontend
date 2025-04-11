@@ -1,19 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
 import { ConfigProvider, Spin } from "antd";
 import { store } from "./redux/store";
 import MainLayout from "./components/Layout/MainLayout";
-import OTPLogin from "./components/Auth/OTPLogin";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
-import Dashboard from "./pages/Dashboard";
-import Partners from "./pages/Partners";
-import Leads from "./pages/Leads";
-import Contacts from "./pages/Contacts";
 import { onAuthStateChanged } from "firebase/auth";
 import { login, logout } from "./redux/slices/authSlice";
 import { auth } from "./config/firebase";
-import ProfileDetails from "./pages/Profile/ProfileDetails";
+
+// Lazy load components
+const OTPLogin = lazy(() => import("./components/Auth/OTPLogin"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Partners = lazy(() => import("./pages/Partners"));
+const Leads = lazy(() => import("./pages/Leads"));
+const Contacts = lazy(() => import("./pages/Contacts"));
+const Brochures = lazy(() => import("./components/Brochures/Brochures"));
+const ProfileDetails = lazy(() => import("./pages/Profile/ProfileDetails"));
+
+// Loading component for suspense fallback
+const LoadingComponent = ({ tip = "Loading..." }: { tip?: string }) => (
+  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <Spin tip={tip} size="large" />
+  </div>
+);
 
 const AppContent: React.FC = () => {
   const dispatch: any = useDispatch();
@@ -41,19 +51,21 @@ const AppContent: React.FC = () => {
   }, [dispatch]);
 
   if (loading) {
-    // AntD spinner with Tailwind CSS perfectly centered
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Spin tip="Loading..." size="large" />
-      </div>
-    );
+    return <LoadingComponent tip="Authenticating..." />;
   }
 
   // Once auth check finishes, app routes render without glitch
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<OTPLogin />} />
+        <Route
+          path="/login"
+          element={
+            <Suspense fallback={<LoadingComponent tip="Loading login..." />}>
+              <OTPLogin />
+            </Suspense>
+          }
+        />
         <Route
           path="/"
           element={
@@ -63,11 +75,54 @@ const AppContent: React.FC = () => {
           }
         >
           <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<ProfileDetails />} />
-          <Route path="partners" element={<Partners />} />
-          <Route path="leads" element={<Leads />} />
-          <Route path="contacts" element={<Contacts />} />
+          <Route
+            path="dashboard"
+            element={
+              <Suspense fallback={<LoadingComponent tip="Loading dashboard..." />}>
+                <Dashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Suspense fallback={<LoadingComponent tip="Loading profile..." />}>
+                <ProfileDetails />
+              </Suspense>
+            }
+          />
+          <Route
+            path="partners"
+            element={
+              <Suspense fallback={<LoadingComponent tip="Loading partners..." />}>
+                <Partners />
+              </Suspense>
+            }
+          />
+          <Route
+            path="leads"
+            element={
+              <Suspense fallback={<LoadingComponent tip="Loading leads..." />}>
+                <Leads />
+              </Suspense>
+            }
+          />
+          <Route
+            path="contacts"
+            element={
+              <Suspense fallback={<LoadingComponent tip="Loading contacts..." />}>
+                <Contacts />
+              </Suspense>
+            }
+          />
+          <Route
+            path="brochures"
+            element={
+              <Suspense fallback={<LoadingComponent tip="Loading brochures..." />}>
+                <Brochures />
+              </Suspense>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
