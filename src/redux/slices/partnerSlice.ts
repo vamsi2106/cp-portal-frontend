@@ -35,6 +35,7 @@ export const fetchPartnerHierarchy = createAsyncThunk(
     const response = await api.get<PartnerHierarchy>(
       API_ROUTES.PARTNERS.HIERARCHY(partnerId)
     );
+    console.log('Partner hierarchy API response:', response);
     return response;
   }
 );
@@ -42,7 +43,20 @@ export const fetchPartnerHierarchy = createAsyncThunk(
 const partnerSlice = createSlice({
   name: 'partner',
   initialState,
-  reducers: {},
+  reducers: {
+    addPartnerOptimistically(state: any, action: any) {
+      if (state.hierarchy?.Sub_Partners) {
+        state.hierarchy.Sub_Partners.push({
+          id: action.payload.id,
+          Name: action.payload.Name,
+          Phone_Number: action.payload.Phone_Number,
+          Email: action.payload.Email,
+          Reporting_To_Partner: state.hierarchy.name,
+          Sub_Partners: [],
+        });
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPartnerDetail.pending, (state) => {
@@ -72,4 +86,6 @@ const partnerSlice = createSlice({
   },
 });
 
+
+export const { addPartnerOptimistically } = partnerSlice.actions;
 export default partnerSlice.reducer;

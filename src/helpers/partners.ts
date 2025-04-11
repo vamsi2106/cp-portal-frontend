@@ -4,7 +4,8 @@ interface Partner {
     Name: string;
     Email?: string | null;
     Phone_Number?: string | null;
-    Parent_Partner?: { name: string; id: string } | null;
+    Organization_Name?: string | null;
+    Reporting_To_Partner?: { name: string; id: string | number } | null;
     Sub_Partners?: Partner[];
 }
 
@@ -13,7 +14,8 @@ interface FlattenedPartner {
     Name: string;
     Email: string;
     Phone_Number: string;
-    Parent_Partner?: { name: string; id: string } | {};
+    Organization_Name?: string;
+    Reporting_To_Partner?: { name: string; id: string | number } | {};
 }
 
 // Function to flatten the partner hierarchy
@@ -26,7 +28,8 @@ const flattenPartners = (partner: Partner, parentName: string | null = null, par
         Name: partner.Name,
         Email: partner.Email || '—',
         Phone_Number: partner.Phone_Number || '—',
-        Parent_Partner: parentName ? { name: parentName, id: parentId } : {}, // Maintain reporting hierarchy
+        Organization_Name: partner.Organization_Name || '—',
+        Reporting_To_Partner: parentName ? { name: parentName, id: parentId } : {}, // Maintain reporting hierarchy
     });
 
     // Recursively flatten the sub-partners

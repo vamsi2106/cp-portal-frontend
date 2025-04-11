@@ -19,3 +19,15 @@ export interface LeadHierarchy {
     }[];
   }[];
 }
+
+
+export interface ContactHierarchy {
+  data: {
+    partnerId: string;
+    partnerName: string;
+    contacts: {
+      id: string;
+      ContactName: string;
+    }[];
+  }[];
+}

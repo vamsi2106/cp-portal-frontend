@@ -24,8 +24,8 @@ export const signup = createAsyncThunk(
   async (data: SignupRequest & { token: string }, { rejectWithValue }) => {
     try {
       const response = await api.post<SignupResponse>(API_ROUTES.AUTH.SIGNUP, {
-        Name: data.fullName,
-        phoneNumber: data.phoneNumber
+        Name: data.Name,
+        Phone: data.phoneNumber
       });
       return { ...response, token: data.token };
     } catch (error: any) {

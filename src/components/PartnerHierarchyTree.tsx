@@ -19,19 +19,10 @@ const PartnerHierarchyTree = ({ data }: { data: PartnerNode }) => {
     const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
     useEffect(() => {
-        const updateDimensions = () => {
-            if (treeContainer.current) {
-                const { width, height } = treeContainer.current.getBoundingClientRect();
-                setDimensions({
-                    width: Math.max(width, 320),
-                    height: Math.max(height, 400)
-                });
-            }
-        };
-
-        updateDimensions();
-        window.addEventListener('resize', updateDimensions);
-        return () => window.removeEventListener('resize', updateDimensions);
+        if (treeContainer.current) {
+            const { width, height } = treeContainer.current.getBoundingClientRect();
+            setDimensions({ width, height });
+        }
     }, []);
 
     const transformData = (node: PartnerNode, level: number = 0): any => ({
@@ -45,21 +36,21 @@ const PartnerHierarchyTree = ({ data }: { data: PartnerNode }) => {
     });
 
     const renderCustomNode = ({ nodeDatum }: any) => {
-        const colors = ['border-blue-500', 'border-green-500', 'border-yellow-500', 'border-purple-500', 'border-pink-500'];
+        const colors = ['border-primary-gold', 'border-primary-dark', 'border-primary-gold/70', 'border-primary-dark/70'];
         const level = nodeDatum.__rd3t?.depth || 0;
 
         return (
             <foreignObject width={180} height={120} x={-90} y={-60}>
                 <div
                     xmlns="http://www.w3.org/1999/xhtml"
-                    className={`rounded-lg border-l-4 ${colors[level % colors.length]} bg-white p-3 text-center shadow-md`}
+                    className={`rounded-lg border-l-4 ${colors[level % colors.length]} bg-white p-3 text-center shadow-md transition-all duration-300 hover:shadow-lg hover:border-primary-gold`}
                 >
                     <div className="flex justify-center mb-1">
-                        <div className="bg-blue-100 p-2 rounded-full w-10 h-10 flex items-center justify-center">
-                            <User className="w-5 h-5 text-blue-600" />
+                        <div className="bg-secondary-light-cream p-2 rounded-full w-10 h-10 flex items-center justify-center">
+                            <User className="w-5 h-5 text-primary-gold" />
                         </div>
                     </div>
-                    <div className="font-semibold text-gray-800 text-sm">{nodeDatum?.name}</div>
+                    <div className="font-semibold text-primary-dark text-sm">{nodeDatum?.name}</div>
                     <div className="text-xs text-gray-500">{nodeDatum?.attributes?.Phone}</div>
                     {nodeDatum?.attributes?.Email && (
                         <div className="text-xs text-gray-400 truncate">{nodeDatum?.attributes?.Email}</div>
@@ -87,12 +78,16 @@ const PartnerHierarchyTree = ({ data }: { data: PartnerNode }) => {
     return (
         <div className="space-y-4">
             <div className="flex justify-end">
-                <Button icon={<Download className="w-4 h-4" />} onClick={handleExportImage}>
+                <Button
+                    icon={<Download className="w-4 h-4" />}
+                    onClick={handleExportImage}
+                    className="bg-white border-primary-gold/30 text-primary-dark hover:bg-secondary-light-cream hover:border-primary-gold"
+                >
                     Export as PNG
                 </Button>
             </div>
 
-            <div ref={treeWrapperRef} className="border rounded-lg shadow-inner bg-gray-50 p-4">
+            <div ref={treeWrapperRef} className="border rounded-lg shadow-inner bg-secondary-light-cream p-4 border-secondary-cream">
                 <div ref={treeContainer} className="w-full h-[80vh] overflow-hidden">
                     <Tree
                         data={transformData(data)}
@@ -105,6 +100,7 @@ const PartnerHierarchyTree = ({ data }: { data: PartnerNode }) => {
                         separation={{ siblings: 1.5, nonSiblings: 2 }}
                         renderCustomNodeElement={renderCustomNode}
                         enableLegacyTransitions
+                        pathClassFunc={() => 'stroke-primary-gold stroke-2 opacity-70'}
                     />
                 </div>
             </div>

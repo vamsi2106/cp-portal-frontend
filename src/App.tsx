@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Provider, useDispatch } from 'react-redux';
-import { ConfigProvider, Spin } from 'antd';
-import { store } from './redux/store';
-import MainLayout from './components/Layout/MainLayout';
-import OTPLogin from './components/Auth/OTPLogin';
-import ProtectedRoute from './components/Auth/ProtectedRoute';
-import Dashboard from './pages/Dashboard';
-import Partners from './pages/Partners';
-import Leads from './pages/Leads';
-import { onAuthStateChanged } from 'firebase/auth';
-import { login, logout } from './redux/slices/authSlice';
-import { auth } from './config/firebase';
-import ProfileDetails from './pages/Profile/ProfileDetails';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Provider, useDispatch } from "react-redux";
+import { ConfigProvider, Spin } from "antd";
+import { store } from "./redux/store";
+import MainLayout from "./components/Layout/MainLayout";
+import OTPLogin from "./components/Auth/OTPLogin";
+import ProtectedRoute from "./components/Auth/ProtectedRoute";
+import Dashboard from "./pages/Dashboard";
+import Partners from "./pages/Partners";
+import Leads from "./pages/Leads";
+import Contacts from "./pages/Contacts";
+import { onAuthStateChanged } from "firebase/auth";
+import { login, logout } from "./redux/slices/authSlice";
+import { auth } from "./config/firebase";
+import ProfileDetails from "./pages/Profile/ProfileDetails";
 
 const AppContent: React.FC = () => {
   const dispatch: any = useDispatch();
@@ -24,15 +25,15 @@ const AppContent: React.FC = () => {
       try {
         if (user) {
           const token = await user.getIdToken();
-          const phoneNumber = user.phoneNumber?.replace(/^\+91/, '') || '';
+          const phoneNumber = user.phoneNumber?.replace(/^\+91/, "") || "";
           await dispatch(login({ phoneNumber, token }));
         } else {
           dispatch(logout());
         }
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'An error occurred');
+        setError(error instanceof Error ? error.message : "An error occurred");
       } finally {
-        setLoading(false);  // Always stop loading, regardless of outcome
+        setLoading(false); // Always stop loading, regardless of outcome
       }
     });
 
@@ -66,6 +67,7 @@ const AppContent: React.FC = () => {
           <Route path="/profile" element={<ProfileDetails />} />
           <Route path="partners" element={<Partners />} />
           <Route path="leads" element={<Leads />} />
+          <Route path="contacts" element={<Contacts />} />
         </Route>
       </Routes>
     </BrowserRouter>
@@ -77,11 +79,23 @@ const App: React.FC = () => (
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: '#DAA520',
+          colorPrimary: "#cca95a",
           borderRadius: 8,
-          colorBgContainer: '#FFFFFF',
-          colorBorder: '#F4D03F',
-          colorTextBase: '#333333',
+          colorBgContainer: "#FFFFFF",
+          colorBorder: "#cca95a",
+          colorTextBase: "#132430",
+          colorBgLayout: "#f6f4ef",
+          colorBgElevated: "#FFFFFF",
+          colorBgMask: "rgba(204, 169, 90, 0.1)",
+          colorPrimaryHover: "#b89948",
+          colorPrimaryActive: "#b89948",
+          colorPrimaryBg: "#f6f4ef",
+          colorPrimaryBgHover: "#ede9df",
+          colorPrimaryBorder: "#cca95a",
+          colorPrimaryBorderHover: "#b89948",
+          colorPrimaryText: "#cca95a",
+          colorPrimaryTextHover: "#b89948",
+          colorPrimaryTextActive: "#b89948",
         },
       }}
     >
