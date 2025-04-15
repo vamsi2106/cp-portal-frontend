@@ -831,24 +831,128 @@ const Contacts: React.FC = () => {
                 return null;
             }
 
+            // Function to get stage tag color
+            const getStageTagColor = (stage: string) => {
+                const stageColors: { [key: string]: string } = {
+                    'Not Interested': '#ff4d4f',
+                    'RNR': '#722ed1',
+                    'Follow Up': '#faad14',
+                    'New Lead': '#ffc53d',
+                    'Initial Contact': '#1890ff',
+                    'VM Done': '#52c41a',
+                    'Call Back': '#fa8c16',
+                    'Lost': '#f5222d',
+                    'Home Visit Done': '#13c2c2',
+                    'Site Visit Done': '#52c41a'
+                };
+                return stageColors[stage] || '#d9d9d9';
+            };
+
             return (
-                <div className="mt-2">
+                <div className="mt-4">
                     {deals.map((deal: any, index: number) => (
-                        <div key={deal.id || index} className="mb-3 last:mb-0">
-                            <div className="flex items-center mb-1">
-                                <div className="h-2 w-2 rounded-full bg-[#DAA520] mr-2"></div>
-                                <span className="font-medium text-sm">
-                                    {deal.name || deal.Deal_Name || 'Deal Started'}
-                                </span>
+                        <div key={deal.id || index} className="mb-6 last:mb-0">
+                            <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center">
+                                    <span className="font-medium text-[#132430]">
+                                        {deal.name || 'Unnamed Deal'}
+                                    </span>
+                                    <Tag
+                                        className="ml-2"
+                                        style={{
+                                            backgroundColor: getStageTagColor(deal.stage),
+                                            color: '#fff',
+                                            border: 'none'
+                                        }}
+                                    >
+                                        {deal.stage}
+                                    </Tag>
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                    Created: {dayjs(deal.createdTime).format('MMM DD, YYYY')}
+                                </div>
                             </div>
-                            <div className="ml-4 text-xs text-gray-500">
-                                {deal.createdTime ? dayjs(deal.createdTime).format('MMM DD, YYYY') : ''}
-                                {deal.stage && (
-                                    <div>
-                                        <span className="text-blue-500">Stage: </span>
-                                        <span className="text-blue-500">{deal.stage}</span>
-                                    </div>
-                                )}
+
+                            {/* Stage History Table */}
+                            <div className="bg-white rounded-lg border border-gray-200">
+                                <div className="px-4 py-3 border-b border-gray-200">
+                                    <Typography.Text strong>Stage History</Typography.Text>
+                                </div>
+                                <Table
+                                    columns={[
+                                        {
+                                            title: 'Stage',
+                                            dataIndex: 'stage',
+                                            key: 'stage',
+                                            render: (stage: string) => (
+                                                <Tag
+                                                    style={{
+                                                        backgroundColor: getStageTagColor(stage),
+                                                        color: '#fff',
+                                                        border: 'none',
+                                                        minWidth: '100px',
+                                                        textAlign: 'center'
+                                                    }}
+                                                >
+                                                    {stage}
+                                                </Tag>
+                                            )
+                                        },
+                                        {
+                                            title: 'Expected Revenue',
+                                            dataIndex: 'expectedRevenue',
+                                            key: 'expectedRevenue',
+                                            render: (value: number) => value ? `₹${value.toLocaleString()}` : '-'
+                                        },
+                                        {
+                                            title: 'Closing Date',
+                                            dataIndex: 'closingDate',
+                                            key: 'closingDate',
+                                            render: (date: string) => date ? dayjs(date).format('DD/MM/YYYY') : '-'
+                                        },
+                                        {
+                                            title: 'Stage Duration',
+                                            dataIndex: 'stageDuration',
+                                            key: 'stageDuration',
+                                            render: (days: number) => days ? `${days} days` : '-'
+                                        },
+                                        {
+                                            title: 'Modified Time',
+                                            dataIndex: 'modifiedTime',
+                                            key: 'modifiedTime',
+                                            render: (time: string) => dayjs(time).format('DD/MM/YYYY hh:mm A')
+                                        },
+                                        {
+                                            title: 'Modified By',
+                                            dataIndex: 'modifiedBy',
+                                            key: 'modifiedBy'
+                                        },
+                                        {
+                                            title: 'Moved To',
+                                            dataIndex: 'movedTo',
+                                            key: 'movedTo',
+                                            render: (stage: string) => stage ? (
+                                                <Tag
+                                                    style={{
+                                                        backgroundColor: getStageTagColor(stage),
+                                                        color: '#fff',
+                                                        border: 'none',
+                                                        minWidth: '100px',
+                                                        textAlign: 'center'
+                                                    }}
+                                                >
+                                                    {stage}
+                                                </Tag>
+                                            ) : '-'
+                                        }
+                                    ]}
+                                    dataSource={deal.stageHistory}
+                                    pagination={false}
+                                    size="small"
+                                    scroll={{ x: true }}
+                                    rowKey={(record, index) => `${deal.id}-${index}`}
+                                    className="stage-history-table"
+                                />
                             </div>
                         </div>
                     ))}
@@ -905,6 +1009,57 @@ const Contacts: React.FC = () => {
                             }
                             .ant-modal-wrap {
                                 overflow: hidden !important;
+                            }
+                            /* Custom Timeline Styles */
+                            .custom-timeline.ant-timeline {
+                                margin-top: 8px;
+                            }
+                            .custom-timeline .ant-timeline-item {
+                                padding-bottom: 12px;
+                            }
+                            .custom-timeline .ant-timeline-item-tail {
+                                border-left: 1px solid rgba(218, 165, 32, 0.2);
+                            }
+                            .custom-timeline .ant-timeline-item:last-child .ant-timeline-item-tail {
+                                border-left: 1px solid transparent;
+                            }
+                            .custom-timeline .ant-timeline-item-content {
+                                margin-left: 20px;
+                                padding: 4px 8px;
+                                background: rgba(218, 165, 32, 0.05);
+                                border-radius: 4px;
+                                min-height: auto;
+                            }
+                            /* Stage History Table Styles */
+                            .stage-history-table {
+                                font-size: 13px;
+                            }
+                            .stage-history-table .ant-table-thead > tr > th {
+                                background-color: #f8f7f3;
+                                font-weight: 500;
+                                color: #132430;
+                                padding: 8px 16px;
+                            }
+                            .stage-history-table .ant-table-tbody > tr > td {
+                                padding: 8px 16px;
+                            }
+                            .stage-history-table .ant-table-tbody > tr:hover > td {
+                                background-color: rgba(218, 165, 32, 0.05);
+                            }
+                            .stage-history-table .ant-table-cell {
+                                white-space: nowrap;
+                            }
+                            .stage-history-table .ant-tag {
+                                margin-right: 0;
+                            }
+                            @media (max-width: 768px) {
+                                .stage-history-table .ant-table {
+                                    font-size: 12px;
+                                }
+                                .stage-history-table .ant-table-thead > tr > th,
+                                .stage-history-table .ant-table-tbody > tr > td {
+                                    padding: 8px;
+                                }
                             }
                         `}
                     </style>
